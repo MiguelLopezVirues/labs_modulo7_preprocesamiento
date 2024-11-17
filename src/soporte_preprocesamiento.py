@@ -128,29 +128,29 @@ class Visualizador:
         fig, axes = plt.subplots(3, int(len(self.dataframe.columns) / 3), figsize=tamano_grafica)
         axes = axes.flat
 
-        for indice, columna in enumerate(self.dataframe.columns):
+        for ax, columna in zip(axes,self.dataframe.columns):
             if columna == vr:
-                fig.delaxes(axes[indice])
+                fig.delaxes(ax)
             elif columna in df_numericas:
                 sns.scatterplot(x=vr, 
                                 y=columna, 
                                 data=self.dataframe, 
                                 color=color, 
-                                ax=axes[indice])
-                axes[indice].set_title(columna)
-                axes[indice].set(xlabel=None)
+                                ax=ax)
+                ax.set_title(columna)
+                ax.set(xlabel=None)
             else:
                 if columna == "Month":
-                    sns.barplot(x=columna, y=vr, data=self.dataframe, order=meses_ordenados, ax=axes[indice],
+                    sns.barplot(x=columna, y=vr, data=self.dataframe, order=meses_ordenados, ax=ax,
                                 color=color)
-                    axes[indice].tick_params(rotation=90)
-                    axes[indice].set_title(columna)
-                    axes[indice].set(xlabel=None)
+                    ax.tick_params(rotation=90)
+                    ax.set_title(columna)
+                    ax.set(xlabel=None)
                 else:
-                    sns.barplot(x=columna, y=vr, data=self.dataframe, ax=axes[indice], color=color)
-                    axes[indice].tick_params(rotation=90)
-                    axes[indice].set_title(columna)
-                    axes[indice].set(xlabel=None)
+                    sns.barplot(x=columna, y=vr, data=self.dataframe, ax=ax, color=color)
+                    ax.tick_params(rotation=90)
+                    ax.set_title(columna)
+                    ax.set(xlabel=None)
 
         plt.tight_layout()
     

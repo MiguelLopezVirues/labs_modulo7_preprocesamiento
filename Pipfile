@@ -12,6 +12,13 @@ ipykernel = "*"
 polars = "*"
 scikit-learn = "*"
 statsmodels = "*"
+plotly-express = "*"
+pyod = "*"
+scikit-posthocs = "*"
+category-encoders = "*"
+fastparquet = "*"
+tqdm = "*"
+association-metrics = "*"
 
 [dev-packages]
 
