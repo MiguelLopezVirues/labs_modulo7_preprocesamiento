@@ -19,6 +19,8 @@ category-encoders = "*"
 fastparquet = "*"
 tqdm = "*"
 association-metrics = "*"
+shap = "*"
+pingouin = "*"
 
 [dev-packages]
 

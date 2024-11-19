@@ -10,7 +10,7 @@ def graficar_distribuciones(df, columna_grupo, columna_metrica):
     for ax, grupo in zip(axes.flat, df[columna_grupo].unique()):
         ax.set_title(f"Distribución de minutos de montaje para el método {grupo}")
         grupo_df = df[df[columna_grupo] == grupo]
-        sns.histplot(grupo_df[columna_metrica], ax=ax)
+        sns.histplot(grupo_df[columna_metrica], ax=ax, bins=25)
 
     plt.tight_layout()
     plt.show()
@@ -85,7 +85,7 @@ def plot_bar_labels(ax: plt.Axes, contrast: bool = False) -> None:
                 x_position, height / 2, f'{height:.2f}',
                 ha='center', va='center', color=text_color,
                 bbox=dict(facecolor=bar_color, edgecolor='none', alpha=0.8),
-                fontsize=12
+                fontsize=8
             )
 
 

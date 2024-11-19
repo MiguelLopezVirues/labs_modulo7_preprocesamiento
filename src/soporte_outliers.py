@@ -34,6 +34,54 @@ import warnings
 warnings.filterwarnings('ignore')
 
 
+
+def capar_imputar(
+        df, column, outlier_column, score_column, threshold=0.15, upper_percentile=99, lower_percentile=1) -> pd.Series:
+    """
+    Ajusta valores fuera de percentiles en los outliers y pone NaN a los demás.
+    Los NaN se imputan con la mediana de la columna.
+
+    Parámetros:
+        df (pd.DataFrame): DataFrame de entrada.
+        column (str): Columna objetivo para ajustar.
+        outlier_column (str): Columna que marca los outliers.
+        score_column (str): Columna con puntajes de anomalías.
+        threshold (float): Puntaje mínimo para considerar anomalías.
+        upper_percentile (int): Percentil superior para ajuste (default: 99).
+        lower_percentile (int): Percentil inferior para ajuste (default: 1).
+
+    Retorna:
+        pd.Series: Columna transformada con valores ajustados.
+    """
+    
+    # Máscaras para identificar outliers y anomalías
+    es_outlier = df[outlier_column] == 1
+    tiene_puntaje_alto = df[score_column] > threshold
+    outliers = df.loc[es_outlier & tiene_puntaje_alto, column]
+
+    # Calcular límites
+    limite_superior = np.nanpercentile(df[column], upper_percentile)
+    limite_inferior = np.nanpercentile(df[column], lower_percentile)
+
+    # Condiciones y resultados
+    condiciones = [
+        outliers < limite_inferior,
+        outliers > limite_superior,
+    ]
+    resultados = [
+        limite_inferior,
+        limite_superior,
+    ]
+
+    # Aplicar np.select
+    result = np.select(condiciones, resultados, default=np.nan)
+    result = pd.Series(result, index=outliers.index)
+
+    # Imputar NaN con la mediana
+    result.fillna(df[column].median(), inplace=True)
+
+    return result
+
 class GestionOutliersUnivariados:
     def __init__(self, dataframe):
         self.dataframe = dataframe
@@ -467,6 +515,8 @@ class GestionOutliersMultivariados:
             data.loc[data[col] > upper_bound, col] = upper_bound
         
         return data.drop("outlier", axis = 1)
+
+
 
     def transformar_outliers(self, data, metodo='log'):
         """
